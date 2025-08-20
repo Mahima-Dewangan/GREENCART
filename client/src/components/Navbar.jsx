@@ -6,7 +6,7 @@ import { UseAppContext } from '../context/AppContext'
 const Navbar = () => {
     const navigate = useNavigate()
     const [open, setOpen] = React.useState(false)
-    const {user , setUser , setShowUserLogin , setSearchQuery , searchQuery}= UseAppContext();
+    const {user , setUser , setShowUserLogin , setSearchQuery , searchQuery , getCartCount }= UseAppContext();
    
     const logout = async ()=>{
         setUser(null);
@@ -43,7 +43,7 @@ const Navbar = () => {
                 <div onClick={()=>navigate("/cart")} className="relative cursor-pointer">
                    <img src={assets.nav_cart_icon} alt="cart" className='w-6 opacity-80'/>
                     <button className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] 
-                    h-[18px] rounded-full">3</button>
+                    h-[18px] rounded-full">{getCartCount()}</button>
                 </div>
 
                 { !user  ? ( <button  onClick={()=>setShowUserLogin(true)} className="cursor-pointer px-8 py-2 bg-primary
@@ -64,10 +64,19 @@ const Navbar = () => {
                 )}
             </div>
 
-            <button onClick={() => open ? setOpen(false) : setOpen(true)} aria-label="Menu" className="sm:hidden">
-                {/* Menu Icon SVG */}
-               <img src={assets.menu_icon} alt="menu" />
+
+            <div className='flex items-center gap-6 sm:hidden'> 
+                  <div onClick={()=>navigate("/cart")} className="relative cursor-pointer">
+                   <img src={assets.nav_cart_icon} alt="cart" className='w-6 opacity-80'/>
+                    <button className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] 
+                    h-[18px] rounded-full">{getCartCount()}</button>
+                  </div>
+
+            <button onClick={() => open ? setOpen(false) : setOpen(true)} aria-label="Menu" className="">
+            <img src={assets.menu_icon} alt="menu" />
             </button>
+
+            </div>
 
             {/* Mobile Menu */}
 
