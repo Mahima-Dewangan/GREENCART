@@ -1,6 +1,6 @@
-import connectCloudinary from "../configs/cloudinary"
+import connectCloudinary from "../configs/cloudinary.js"
 import {v2 as cloudinary }  from "cloudinary"
-import Product from "../modles/Product"
+import Product from "../modles/Product.js"
 import { response } from "express"
 
 // Add Product : /api/product/add
