@@ -1,3 +1,5 @@
+
+
 import { useState } from "react";
 // import { assets } from '../assets/assets'; 
 import { toast } from 'react-hot-toast';
@@ -6,8 +8,12 @@ import { toast } from 'react-hot-toast';
 import { assets, categories } from "../../assets/assets";
 import { UseAppContext } from "../../context/AppContext";
 
+
 const AddProduct = () => {
 
+//      const ctx = UseAppContext();
+// console.log('CTX:', ctx); // This should log an object with axios in it!
+// const { axios } = ctx;
 
     const [files, setFiles] =  useState([]);
     const [name, setName] =  useState('');
@@ -16,7 +22,7 @@ const AddProduct = () => {
     const [price, setPrice] =  useState('');
     const [offerPrice, setOfferPrice] =  useState('');
 
-    const {axios} = UseAppContext()
+    const {axios} = UseAppContext();
 
 
     const onSubmitHandler = async (event) => {
@@ -47,6 +53,7 @@ const AddProduct = () => {
                     setPrice('')
                     setOfferPrice('')
                     setFiles([])
+                  
                 }else{
                     toast.error(data.message)
                 }

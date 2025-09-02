@@ -2,7 +2,7 @@ import { UseAppContext } from "../../context/AppContext";
 
 const ProductList = () => {
 
-    const {products, currency} = UseAppContext()
+    const {products, currency ,} = UseAppContext()
 
 
 
