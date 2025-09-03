@@ -33,7 +33,7 @@ const AddProduct = () => {
                     description: description.split('\n'),
                     category,
                     price,
-                    OfferPrice : Number(offerPrice)
+                    offerPrice 
                 }
 
                 const formData = new FormData();
