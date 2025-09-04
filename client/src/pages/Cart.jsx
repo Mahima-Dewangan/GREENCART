@@ -5,10 +5,10 @@ import toast from "react-hot-toast";
 
 const Cart = () => {
     const {products, currency, cartItems, removeFromCart, getCartCount,
-        updateCartItem, navigate, getCartAmount , axios , user} = UseAppContext()
+        updateCartItem, navigate, getCartAmount , axios , user , setCartItems} = UseAppContext()
     
 
-    const [CartArray, setCartArray] = useState([])
+    const [cartArray, setCartArray] = useState([])
     const [addresses, setAddresses] = useState([])
     const [showAddress, setShowAddress] = useState(false)
     const[selectedAddress , setSelectedAddress] = useState(null)
@@ -48,7 +48,36 @@ const Cart = () => {
             
         }
     }
-    const PlaceOrder = async ()=>{
+    const placeOrder = async ()=>{
+        try {
+
+            if(!selectedAddress)
+            {
+                return toast.error("Please select an address")
+            }
+            
+            // Place order with COD
+            if(paymentOption === "COD"){
+                const {data} = await axios.post('/api/order/cod' , {
+                    userId: user._id,
+                    items: cartArray.map(item=>({product: item._id , quantity: item.quantity})) , 
+                    address: selectedAddress._id
+
+                })
+
+                if(data.success){
+                    toast.success(data.message)
+                    setCartItems({})
+                    navigate('/my-orders')
+                }
+                else{
+                       toast.error(data.message)
+                }
+            }
+
+        } catch (error) {
+                        toast.error(error.message)
+        }
 
     }
 
@@ -82,7 +111,7 @@ const Cart = () => {
                     <p className="text-center">Action</p>
                 </div>
 
-                {CartArray.map((product, index) => (
+                {cartArray.map((product, index) => (
                     <div key={index} className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3">
                         <div className="flex items-center md:gap-6 gap-3">
                             <div onClick={()=>{ navigate(`/products/{product.category.toLowerCase()}/${product._id}`); scrollTo(0,0) 
@@ -167,7 +196,8 @@ const Cart = () => {
                     </p>
                 </div>
 
-                <button className="w-full py-3 mt-6 cursor-pointer bg-primary  text-white font-medium hover:bg-primary-dull transition">
+                <button className="w-full py-3 mt-6 cursor-pointer bg-primary  text-white font-medium hover:bg-primary-dull transition"
+                onClick={placeOrder}>
                     {paymentOption === "COD" ? "Place Order" : "Proceed to checkout"}
                 </button>
             </div>
