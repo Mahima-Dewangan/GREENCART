@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { assets } from '../assets/assets'
+import { UseAppContext } from '../context/AppContext'
+import toast from 'react-hot-toast'
 
 // Import field component 
 const InputField = ({type , placeholder , name , handleChange , address })=>(
@@ -16,16 +18,18 @@ const InputField = ({type , placeholder , name , handleChange , address })=>(
 
 const AddAddress = () => {
 
+    const {axios , user , navigate} = UseAppContext();
+
      const[address , setAddress] = useState({
-        firstName : '',
-        lastName  : '',
-        email     : '',
-        street    : '',
-        city      : '',
-        state     : '',
-        zipcode   : '',
-        country   : '',
-        phone     : '',
+        firstName : "",
+        lastName  : "",
+        email     : "",
+        street    : "",
+        city      : "",
+        state     : "",
+        zipcode   : "",
+        country   : "",
+        phone     : "",
 
      })
 
@@ -39,9 +43,33 @@ const AddAddress = () => {
         }))
 
      }
+
     const onSubmitHandler = async (e)=>{
         e.preventDefault();
+          console.log("FORM SUBMITTED", address);
+        try {
+            
+            const {data} = await axios.post('/api/address/add' , {address})
+            
+            if(data.success){
+                toast.success(data.message)
+                navigate('/cart')
+            }else
+            {
+                toast.error(data.message)
+            }
+        } catch (error) {
+              toast.error(error.message)
+        }
     }
+
+
+    useEffect(()=>{
+        if(!user){
+            navigate('/cart')
+        }
+
+    },[user , navigate])
 
   return (
     <div className='mt-16 pb-16'>
@@ -53,37 +81,37 @@ const AddAddress = () => {
 
 
                     <div className='grid grid-cols-2 gap-4 '>
-                        <InputField  handleChange={handleChange} address={address} name='firstname' 
+                        <InputField  handleChange={handleChange} address={address} name='firstName' required
                         type='text' placeholder='First Name'/>
 
-                         <InputField  handleChange={handleChange} address={address} name='lastname' 
+                         <InputField  handleChange={handleChange} address={address} name="lastName" required
                         type='text' placeholder='Last Name'/>
                     </div>
 
-                    <InputField handleChange={handleChange} address={address} name='email' type='email'
+                    <InputField handleChange={handleChange} address={address} name="email" type='email' required
                     placeholder="Email address" />
-                    <InputField handleChange={handleChange} address={address} name='street' type='text'
+                    <InputField handleChange={handleChange} address={address} name="street" type='text' required
                     placeholder="Street" /> 
 
                     <div className='grid grid-cols-2 gap-4'>
-                    <InputField handleChange={handleChange} address={address} name='city' type='text'
+                    <InputField handleChange={handleChange} address={address} name="city" type='text' required
                     placeholder="City" /> 
-                     <InputField handleChange={handleChange} address={address} name='state' type='text'
+                     <InputField handleChange={handleChange} address={address} name="state" type='text' required
                     placeholder="State" /> 
                     </div>
 
                     <div className='grid grid-cols-2 gap-4'>
-                          <InputField handleChange={handleChange} address={address} name='zipcode' type='text'
+                          <InputField handleChange={handleChange} address={address} name="zipcode" type='text' required
                     placeholder="Zip code" /> 
-                     <InputField handleChange={handleChange} address={address} name='country' type='text'
+                     <InputField handleChange={handleChange} address={address} name="country" type='text' required
                     placeholder="Country" />  
                     </div>
 
-                    <InputField handleChange={handleChange} address={address} name='phone' type='text'
+                    <InputField handleChange={handleChange} address={address} name="phone" type='text' required
                     placeholder="Phone" />  
 
 
-                    <button className='w-full mt-6 bg-primary text-white py-3 
+                    <button  type="submit" className='w-full mt-6 bg-primary text-white py-3 
                     hover: bg-primary-dull transition cursor-pointer uppercase'>
                         Save address
                     </button>
